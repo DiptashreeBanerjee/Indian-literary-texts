@@ -66,6 +66,18 @@
     .count { color: #666; }
 
     footer { text-align: center; padding: 2rem; color: #666; }
+    .sort-bar { margin-bottom: 1rem; }
+    .sort-bar label { margin-right: .5rem; color: #2f5d3a; font-weight: bold; }
+    .sort-bar select {
+      padding: .4rem .7rem;
+      border: 1px solid #2f5d3a;
+      border-radius: 6px;
+      background: #fff;
+      color: #2f5d3a;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -89,6 +101,14 @@
   <main>
     <h1>Extracted Flora</h1>
     <div id="tabs" class="tabs"></div>
+     <div class="sort-bar">
+      <label for="sort">Sort:</label>
+      <select id="sort">
+        <option value="original">Original order</option>
+        <option value="az">A to Z</option>
+        <option value="za">Z to A</option>
+      </select>
+    </div>
     <section id="panel" class="panel"></section>
   </main>
 
@@ -303,27 +323,46 @@
       { label: "The Fall of a Sparrow",    suffix: "5" }
     ];
 
-    const tabsEl = document.getElementById("tabs");
+    const tabsEl  = document.getElementById("tabs");
     const panelEl = document.getElementById("panel");
+    const sortEl  = document.getElementById("sort");
+
+    let current = { title: "", items: [] };   // the tab currently open
 
     TABS.forEach(function (tab, i) {
-      const key = kind + tab.suffix;              // e.g. "flora3"
+      const key = kind + tab.suffix;          // e.g. "flora3"
       const btn = document.createElement("button");
       btn.textContent = tab.label;
-      btn.onclick = function () { show(btn, tab.label, data[key]); };
+      btn.onclick = function () {
+        document.querySelectorAll(".tabs button").forEach(function (b) {
+          b.classList.remove("active");
+        });
+        btn.classList.add("active");
+        current = { title: tab.label, items: data[key] };
+        render();
+      };
       tabsEl.appendChild(btn);
-      if (i === 0) btn.click();                   // open first tab by default
+      if (i === 0) btn.click();               // open first tab by default
     });
 
-    function show(activeBtn, title, items) {
-      document.querySelectorAll(".tabs button").forEach(function (b) {
-        b.classList.remove("active");
-      });
-      activeBtn.classList.add("active");
+    sortEl.onchange = render;                 // re-draw when the sort changes
+
+    function render() {
+      const items = current.items.slice();    // copy, so the original order is kept
+
+      if (sortEl.value === "az") {
+        items.sort(function (a, b) {
+          return a.localeCompare(b, undefined, { sensitivity: "base" });
+        });
+      } else if (sortEl.value === "za") {
+        items.sort(function (a, b) {
+          return b.localeCompare(a, undefined, { sensitivity: "base" });
+        });
+      }
 
       panelEl.innerHTML = "";
       const h = document.createElement("h2");
-      h.textContent = title;
+      h.textContent = current.title;
       const p = document.createElement("p");
       p.className = "count";
       p.textContent = items.length + " entries";
