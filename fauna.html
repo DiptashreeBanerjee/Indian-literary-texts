@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Extracted Fauna | Extracting Flora and Fauna from Indian Texts</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Georgia, serif;
+      margin: 0;
+      color: #222;
+      background: #f6f8f4;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      background: #2f5d3a;
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a, .dropdown > span { color: #fff; text-decoration: none; cursor: pointer; }
+
+    .dropdown { position: relative; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      min-width: 220px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.2);
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a { display: block; color: #2f5d3a; padding: .7rem 1rem; }
+
+    /* Layout */
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+    /* Tabs */
+    .tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .tabs button {
+      padding: .6rem 1rem;
+      border: 1px solid #2f5d3a;
+      background: #fff;
+      color: #2f5d3a;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    .tabs button:hover { background: #e8f0e9; }
+    .tabs button.active { background: #2f5d3a; color: #fff; }
+
+    .panel { background: #fff; padding: 1.5rem; border-radius: 8px; }
+    .panel ul { columns: 3 200px; padding-left: 1.2rem; }
+    .panel li { margin-bottom: .3rem; break-inside: avoid; }
+    .count { color: #666; }
+
+    footer { text-align: center; padding: 2rem; color: #666; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <header>
+    <nav>
+      <a href="index.html#home">Home</a>
+      <a href="index.html#author">Author</a>
+      <div class="dropdown">
+        <span>Project ▾</span>
+        <div class="dropdown-content">
+          <a href="flora.html">View the extracted flora</a>
+          <a href="fauna.html">View the extracted fauna</a>
+        </div>
+      </div>
+      <a href="index.html#limitations">Limitations</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Extracted Fauna</h1>
+    <div id="tabs" class="tabs"></div>
+    <section id="panel" class="panel"></section>
+  </main>
+
+  <footer>© 2026 Your Name</footer>
+
+  <script>
+    // ---------- DATA (from rag.py) ----------
+    const data = {
+      "fauna": [
+            "Mayura",
+            "Hamsa",
+            "Mahisha",
+            "Gaura",
+            "Ushtra",
+            "Kapi",
+            "Makshika",
+            "Varana",
+            "Ashva",
+            "Indohyus",
+            "Thrinaxodon",
+            "Camplyognathus",
+            "Quetzalcoatlus",
+            "Malerisaurus robinsonae",
+            "Laevisuchus",
+            "Chasmosaurus",
+            "Ichthyosaurs",
+            "Evolved ungulates",
+            "Redstart",
+            "Flycatcher",
+            "Buffaloes",
+            "Pigeons",
+            "Finches",
+            "Bulbuls",
+            "Parrots",
+            "Kingera",
+            "Insects",
+            "Flies",
+            "Indian gazelle",
+            "Migratory demoiselle crane",
+            "Peacocks (mayura)",
+            "Swans (hamsa)",
+            "Water buffaloes (mahisha)",
+            "Indian bison (gaura)",
+            "Camel (ushtra)",
+            "Monkey (kapi)",
+            "Crocodile (makshika)",
+            "Elephants (varana)",
+            "Horse (ashva)",
+            "Indian flying foxes",
+            "Kutch Wild Ass",
+            "Black-and-Buff Woodpecker",
+            "Broadbills",
+            "Lesser Flamingo",
+            "Whitewinged Black Jay",
+            "Woodpeckers"
+      ],
+      "fauna1": [
+            "Mayura",
+            "Hamsa",
+            "Mahisha",
+            "Gaura",
+            "Ushtra",
+            "Kapi",
+            "Makshika",
+            "Varana",
+            "Ashva"
+      ],
+      "fauna2": [
+            "Indohyus",
+            "Thrinaxodon",
+            "Camplyognathus",
+            "Quetzalcoatlus",
+            "Malerisaurus robinsonae",
+            "Laevisuchus",
+            "Chasmosaurus",
+            "Ichthyosaurs",
+            "Evolved ungulates"
+      ],
+      "fauna3": [
+            "Redstart",
+            "Flycatcher",
+            "Buffaloes",
+            "Pigeons",
+            "Finches",
+            "Bulbuls",
+            "Parrots",
+            "Kingera",
+            "Insects",
+            "Flies"
+      ],
+      "fauna4": [
+            "Indian gazelle",
+            "Migratory demoiselle crane",
+            "Peacocks (mayura)",
+            "Swans (hamsa)",
+            "Water buffaloes (mahisha)",
+            "Indian bison (gaura)",
+            "Camel (ushtra)",
+            "Monkey (kapi)",
+            "Crocodile (makshika)",
+            "Elephants (varana)",
+            "Horse (ashva)",
+            "Indian flying foxes"
+      ],
+      "fauna5": [
+            "Kutch Wild Ass",
+            "Black-and-Buff Woodpecker",
+            "Broadbills",
+            "Lesser Flamingo",
+            "Whitewinged Black Jay",
+            "Woodpeckers"
+      ]
+};
+
+    // ---------- TABS ----------
+    const kind = "fauna";   // "flora" or "fauna"
+
+    const TABS = [
+      { label: "View all the five novels", suffix: "" },
+      { label: "Cities and Canopies",      suffix: "1" },
+      { label: "Indica",                   suffix: "2" },
+      { label: "Rain in the Mountains",    suffix: "3" },
+      { label: "Sacred Plants of India",   suffix: "4" },
+      { label: "The Fall of a Sparrow",    suffix: "5" }
+    ];
+
+    const tabsEl = document.getElementById("tabs");
+    const panelEl = document.getElementById("panel");
+
+    TABS.forEach(function (tab, i) {
+      const key = kind + tab.suffix;              // e.g. "flora3"
+      const btn = document.createElement("button");
+      btn.textContent = tab.label;
+      btn.onclick = function () { show(btn, tab.label, data[key]); };
+      tabsEl.appendChild(btn);
+      if (i === 0) btn.click();                   // open first tab by default
+    });
+
+    function show(activeBtn, title, items) {
+      document.querySelectorAll(".tabs button").forEach(function (b) {
+        b.classList.remove("active");
+      });
+      activeBtn.classList.add("active");
+
+      panelEl.innerHTML = "";
+      const h = document.createElement("h2");
+      h.textContent = title;
+      const p = document.createElement("p");
+      p.className = "count";
+      p.textContent = items.length + " entries";
+      const ul = document.createElement("ul");
+      items.forEach(function (name) {
+        const li = document.createElement("li");
+        li.textContent = name;
+        ul.appendChild(li);
+      });
+      panelEl.appendChild(h);
+      panelEl.appendChild(p);
+      panelEl.appendChild(ul);
+    }
+  </script>
+
+</body>
+</html>

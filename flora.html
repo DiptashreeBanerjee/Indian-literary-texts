@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Extracted Flora | Extracting Flora and Fauna from Indian Texts</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Georgia, serif;
+      margin: 0;
+      color: #222;
+      background: #f6f8f4;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      background: #2f5d3a;
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a, .dropdown > span { color: #fff; text-decoration: none; cursor: pointer; }
+
+    .dropdown { position: relative; }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      min-width: 220px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.2);
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a { display: block; color: #2f5d3a; padding: .7rem 1rem; }
+
+    /* Layout */
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+    /* Tabs */
+    .tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+    .tabs button {
+      padding: .6rem 1rem;
+      border: 1px solid #2f5d3a;
+      background: #fff;
+      color: #2f5d3a;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    .tabs button:hover { background: #e8f0e9; }
+    .tabs button.active { background: #2f5d3a; color: #fff; }
+
+    .panel { background: #fff; padding: 1.5rem; border-radius: 8px; }
+    .panel ul { columns: 3 200px; padding-left: 1.2rem; }
+    .panel li { margin-bottom: .3rem; break-inside: avoid; }
+    .count { color: #666; }
+
+    footer { text-align: center; padding: 2rem; color: #666; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <header>
+    <nav>
+      <a href="index.html#home">Home</a>
+      <a href="index.html#author">Author</a>
+      <div class="dropdown">
+        <span>Project ▾</span>
+        <div class="dropdown-content">
+          <a href="flora.html">View the extracted flora</a>
+          <a href="fauna.html">View the extracted fauna</a>
+        </div>
+      </div>
+      <a href="index.html#limitations">Limitations</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Extracted Flora</h1>
+    <div id="tabs" class="tabs"></div>
+    <section id="panel" class="panel"></section>
+  </main>
+
+  <footer>© 2026 Your Name</footer>
+
+  <script>
+    // ---------- DATA (from rag.py) ----------
+    const data = {
+      "flora": [
+            "Padma",
+            "Kamala",
+            "Kumuda",
+            "Tamarai",
+            "Abja",
+            "Saroja",
+            "Pundarika",
+            "Ashvini Strychnine Tree",
+            "Bharani Gooseberry",
+            "Krittika Cluster Fig",
+            "Rohini Indian Black Plum",
+            "Mrigashirsha Cutch Tree",
+            "Ardra Red Oak",
+            "Punarvasu Bamboo",
+            "Pushya Pipal",
+            "Ashlesha Alexandrian Laurel",
+            "Magha Banyan",
+            "Poorva-phalguni Flame of the Forest",
+            "Uttara-phalguni Sweet-scented Oleander",
+            "Hasta Wild Mango",
+            "Chitra Bengal Quince",
+            "Svati White Marudh",
+            "Vishakha Wood Apple",
+            "Anuradha Indian Nedler",
+            "Jyeshtha Sandpaper Tree",
+            "Moola Black Sapote",
+            "Poorva-ashadha Bile Killer",
+            "Uttara-ashadha Jackfruit",
+            "Shravana Swallow Wort",
+            "Dhanishtha Indian Mesquite",
+            "Shata-taraka Wild Cinchona",
+            "Purva-bhadrapada Mango",
+            "Uttara-bhadrapada Neem",
+            "Revati Indian Butter Tree",
+            "Pterocarpus Santalinus",
+            "Alstonia Scolaris",
+            "Wrightia Tinctoria",
+            "Butea Monosperma",
+            "Mangifera Indica",
+            "Mimusops Elengi",
+            "Acacia Catechu",
+            "Ficus Religiosa",
+            "Ficus Benghalensis",
+            "Prosopis Spicigera",
+            "Dalbergia Latifolia",
+            "Dipterocarps",
+            "Glossopteris",
+            "Sal tree",
+            "Cycas",
+            "Amborella",
+            "Magnolias",
+            "Pranhita–Godavari Valley (P–G valley) forest types",
+            "Ginger",
+            "Mango",
+            "Flora Himaliensis",
+            "Primrose",
+            "Larkspur",
+            "Climbing Ivy",
+            "Philodendron",
+            "Begonias",
+            "Geraniums",
+            "Ashvini strychnine tree Strychnos nux-vomica",
+            "Bharani Indian gooseberry Phyllanthus emblica",
+            "Krittika cluster fig Ficus glomerata",
+            "Rohini Indian black plum Eugenia jaambolana",
+            "Mrigashirsha cutch tree Acacia catechu",
+            "Ardra red oak Diospyros melanoxylon",
+            "Punarvasu bamboo Bambusa vulgais",
+            "Pushya pipal Ficus religiosa",
+            "Ashlesha Alexandrian laurel Calophyllum indophyllum",
+            "Magha banyan Ficus benghalensis",
+            "Poorva-phalguni flame of the forest Butea monosperma",
+            "Uttara-phalguni sweet-scented oleander Ficus tinctoria",
+            "Hasta wild mango Spondias pinnata",
+            "Chitra Bengal quince Aegle marmelos",
+            "Svati white marudh Terminalia arjuna",
+            "Vishakha wood apple Feronia elephantum",
+            "Anuradha Indian nedler Mimusops elengi",
+            "Jyeshtha sandpaper tree Aporusa lindleyana",
+            "Moola black sapote Boswellia serrata",
+            "Poorva-ashadha bile killer Salix tetraspeama",
+            "Uttara-ashadha jackfruit Artocarpus",
+            "Sal",
+            "Tamarind (Tamarindus indica)",
+            "Gram Flour",
+            "Prosopis spicigera",
+            "Ghana",
+            "Jaggery",
+            "Clarified Butter",
+            "Bamboo"
+      ],
+      "flora1": [
+            "Padma",
+            "Kamala",
+            "Kumuda",
+            "Tamarai",
+            "Abja",
+            "Saroja",
+            "Pundarika",
+            "Ashvini Strychnine Tree",
+            "Bharani Gooseberry",
+            "Krittika Cluster Fig",
+            "Rohini Indian Black Plum",
+            "Mrigashirsha Cutch Tree",
+            "Ardra Red Oak",
+            "Punarvasu Bamboo",
+            "Pushya Pipal",
+            "Ashlesha Alexandrian Laurel",
+            "Magha Banyan",
+            "Poorva-phalguni Flame of the Forest",
+            "Uttara-phalguni Sweet-scented Oleander",
+            "Hasta Wild Mango",
+            "Chitra Bengal Quince",
+            "Svati White Marudh",
+            "Vishakha Wood Apple",
+            "Anuradha Indian Nedler",
+            "Jyeshtha Sandpaper Tree",
+            "Moola Black Sapote",
+            "Poorva-ashadha Bile Killer",
+            "Uttara-ashadha Jackfruit",
+            "Shravana Swallow Wort",
+            "Dhanishtha Indian Mesquite",
+            "Shata-taraka Wild Cinchona",
+            "Purva-bhadrapada Mango",
+            "Uttara-bhadrapada Neem",
+            "Revati Indian Butter Tree",
+            "Pterocarpus Santalinus",
+            "Alstonia Scolaris",
+            "Wrightia Tinctoria",
+            "Butea Monosperma",
+            "Mangifera Indica",
+            "Mimusops Elengi",
+            "Acacia Catechu",
+            "Ficus Religiosa",
+            "Ficus Benghalensis",
+            "Prosopis Spicigera",
+            "Dalbergia Latifolia"
+      ],
+      "flora2": [
+            "Dipterocarps",
+            "Glossopteris",
+            "Sal tree",
+            "Cycas",
+            "Amborella",
+            "Magnolias",
+            "Pranhita–Godavari Valley (P–G valley) forest types",
+            "Ginger",
+            "Mango"
+      ],
+      "flora3": [
+            "Flora Himaliensis",
+            "Primrose",
+            "Larkspur",
+            "Climbing Ivy",
+            "Philodendron",
+            "Begonias",
+            "Geraniums"
+      ],
+      "flora4": [
+            "Ashvini strychnine tree Strychnos nux-vomica",
+            "Bharani Indian gooseberry Phyllanthus emblica",
+            "Krittika cluster fig Ficus glomerata",
+            "Rohini Indian black plum Eugenia jaambolana",
+            "Mrigashirsha cutch tree Acacia catechu",
+            "Ardra red oak Diospyros melanoxylon",
+            "Punarvasu bamboo Bambusa vulgais",
+            "Pushya pipal Ficus religiosa",
+            "Ashlesha Alexandrian laurel Calophyllum indophyllum",
+            "Magha banyan Ficus benghalensis",
+            "Poorva-phalguni flame of the forest Butea monosperma",
+            "Uttara-phalguni sweet-scented oleander Ficus tinctoria",
+            "Hasta wild mango Spondias pinnata",
+            "Chitra Bengal quince Aegle marmelos",
+            "Svati white marudh Terminalia arjuna",
+            "Vishakha wood apple Feronia elephantum",
+            "Anuradha Indian nedler Mimusops elengi",
+            "Jyeshtha sandpaper tree Aporusa lindleyana",
+            "Moola black sapote Boswellia serrata",
+            "Poorva-ashadha bile killer Salix tetraspeama",
+            "Uttara-ashadha jackfruit Artocarpus"
+      ],
+      "flora5": [
+            "Sal",
+            "Tamarind (Tamarindus indica)",
+            "Gram Flour",
+            "Prosopis spicigera",
+            "Ghana",
+            "Jaggery",
+            "Clarified Butter",
+            "Bamboo"
+      ]
+};
+
+    // ---------- TABS ----------
+    const kind = "flora";   // "flora" or "fauna"
+
+    const TABS = [
+      { label: "View all the five novels", suffix: "" },
+      { label: "Cities and Canopies",      suffix: "1" },
+      { label: "Indica",                   suffix: "2" },
+      { label: "Rain in the Mountains",    suffix: "3" },
+      { label: "Sacred Plants of India",   suffix: "4" },
+      { label: "The Fall of a Sparrow",    suffix: "5" }
+    ];
+
+    const tabsEl = document.getElementById("tabs");
+    const panelEl = document.getElementById("panel");
+
+    TABS.forEach(function (tab, i) {
+      const key = kind + tab.suffix;              // e.g. "flora3"
+      const btn = document.createElement("button");
+      btn.textContent = tab.label;
+      btn.onclick = function () { show(btn, tab.label, data[key]); };
+      tabsEl.appendChild(btn);
+      if (i === 0) btn.click();                   // open first tab by default
+    });
+
+    function show(activeBtn, title, items) {
+      document.querySelectorAll(".tabs button").forEach(function (b) {
+        b.classList.remove("active");
+      });
+      activeBtn.classList.add("active");
+
+      panelEl.innerHTML = "";
+      const h = document.createElement("h2");
+      h.textContent = title;
+      const p = document.createElement("p");
+      p.className = "count";
+      p.textContent = items.length + " entries";
+      const ul = document.createElement("ul");
+      items.forEach(function (name) {
+        const li = document.createElement("li");
+        li.textContent = name;
+        ul.appendChild(li);
+      });
+      panelEl.appendChild(h);
+      panelEl.appendChild(p);
+      panelEl.appendChild(ul);
+    }
+  </script>
+
+</body>
+</html>
