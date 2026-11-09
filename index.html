@@ -116,6 +116,51 @@
       letter-spacing: .6rem;
       margin-top: 1rem;
     }
+        /* ---------- Bar chart ---------- */
+    .chart {
+      display: flex;
+      justify-content: space-around;
+      gap: .5rem;
+      padding: 2rem 1rem 0;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 1px #d8dfd3;
+    }
+    .group { flex: 1; min-width: 80px; text-align: center; }
+    .bars {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 6px;
+      height: 240px;
+      border-bottom: 2px solid #2f5d3a;
+    }
+    .bar {
+      position: relative;
+      width: 32px;
+      border-radius: 6px 6px 0 0;
+    }
+    .bar span {
+      position: absolute;
+      top: -1.5rem;
+      left: 0;
+      width: 100%;
+      font-weight: bold;
+      font-size: .95rem;
+    }
+    .flora-bar { background: linear-gradient(#5fae70, #2f5d3a); }
+    .fauna-bar { background: linear-gradient(#eaa65a, #b5651d); }
+    .book-name { font-size: .85rem; padding: .6rem .2rem 1rem; line-height: 1.3; }
+
+    .legend { text-align: center; margin-top: .8rem; }
+    .dot {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      margin: 0 .3rem 0 1rem;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
@@ -147,8 +192,7 @@
         in five books on Indian nature and culture: <em>Cities and Canopies</em>,
         <em>Indica</em>, <em>Rain in the Mountains</em>,
         <em>Sacred Plants of India</em> and <em>The Fall of a Sparrow</em>.
-        The results for each book, and for all five together, can be explored
-        from the Project menu above.
+        The results for each book, and for all five together, can be explored from the Project menu above.
       </p>
 
       <p>
@@ -159,6 +203,12 @@
       <p>
         <a class="btn btn-light" href="flora.html">View the extracted flora</a>
         <a class="btn btn-light" href="fauna.html">View the extracted fauna</a>
+        <h2>Flora and Fauna Extracted from Each Book</h2>
+      <div class="chart" id="chart"></div>
+      <div class="legend">
+        <span class="dot flora-bar"></span> Flora
+        <span class="dot fauna-bar"></span> Fauna
+      </div>
       </p>
     </section>
 
@@ -188,11 +238,11 @@
     <section id="References">
       <h2>Bibliography</h2>
       <ul>
-        <li><strong>Cities and Canopies : Trees in Indian Cities - </strong>Harini Nagendra, and Seema Mundoli. Cities and Canopies : Trees in Indian Cities. Penguin/Viking, An Imprint Of Penguin Random House, 2019.</li>
-        <li><strong>Indica: A Deep Natural History of the Indian Subcontinent - </strong>Lal, Pranay. Indica. Random House India, 2016.</li>
-        <li><strong>Rain in the Mountains - </strong>Bond, Ruskin. Rain in the Mountains. Penguin UK, 2016.</li>
-        <li><strong>Sacred Plants of India- </strong>Krishna, Nanditha, and M. Amirthalingam. Sacred Plants of India. Penguin Books India, 2014.</li>
-        <li><strong>The Fall of a Sparrow- </strong>Ali, Sálim. The Fall of a Sparrow. Oxford University Press, 1988.</li>
+        <li><strong>Cities and Canopies : Trees in Indian Cities - </strong>Harini Nagendra, and Seema Mundoli. <em>Cities and Canopies : Trees in Indian Cities.</em> Penguin/Viking, An Imprint Of Penguin Random House, 2019.</li>
+        <li><strong>Indica: A Deep Natural History of the Indian Subcontinent - </strong>Lal, Pranay.<em> Indica </em> Random House India, 2016.</li>
+        <li><strong>Rain in the Mountains - </strong>Bond, Ruskin. <em>Rain in the Mountains. </em> Penguin UK, 2016.</li>
+        <li><strong>Sacred Plants of India- </strong>Krishna, Nanditha, and M. Amirthalingam. <em>Sacred Plants of India.</em> Penguin Books India, 2014.</li>
+        <li><strong>The Fall of a Sparrow- </strong>Ali, Sálim. <em>The Fall of a Sparrow. </em>Oxford University Press, 1988.</li>
       </ul>
     </section>
   </main>
@@ -200,5 +250,35 @@
    <div class="wildlife">🌿 🦚 🌳 🐘 🌺 🦜 🌴 🐅 🍃</div>
   <footer>© 2026 Diptashree Banerjee</footer>
 
+    <script>
+    // Number of entries extracted from each book (from rag.py)
+    const books = [
+      { name: "Cities and Canopies",    flora: 45, fauna: 9  },
+      { name: "Indica",                 flora: 9,  fauna: 9  },
+      { name: "Rain in the Mountains",  flora: 7,  fauna: 10 },
+      { name: "Sacred Plants of India", flora: 21, fauna: 12 },
+      { name: "The Fall of a Sparrow",  flora: 8,  fauna: 6  }
+    ];
+
+    const chartEl = document.getElementById("chart");
+    const tallest = Math.max.apply(null, books.map(function (b) {
+      return Math.max(b.flora, b.fauna);
+    }));
+    const MAX_HEIGHT = 210;   // pixels for the tallest bar
+
+    books.forEach(function (book) {
+      const group = document.createElement("div");
+      group.className = "group";
+      group.innerHTML =
+        '<div class="bars">' +
+          '<div class="bar flora-bar" style="height:' + (book.flora / tallest * MAX_HEIGHT) + 'px">' +
+            '<span>' + book.flora + '</span></div>' +
+          '<div class="bar fauna-bar" style="height:' + (book.fauna / tallest * MAX_HEIGHT) + 'px">' +
+            '<span>' + book.fauna + '</span></div>' +
+        '</div>' +
+        '<div class="book-name">' + book.name + '</div>';
+      chartEl.appendChild(group);
+    });
+  </script>
 </body>
 </html>
